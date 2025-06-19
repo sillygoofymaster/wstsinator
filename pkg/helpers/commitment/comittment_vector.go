@@ -1,7 +1,7 @@
 package commitment
 
 import (
-	"github.com/sillygoofymaster/wstsinator/pkg/internal/secp256k1"
+	"github.com/sillygoofymaster/wstsinator/pkg/helpers/secp256k1"
 )
 
 type CommitmentVector struct {
@@ -55,6 +55,20 @@ func (vect *CommitmentVector) Evaluate(scalar *secp256k1.Scalar) *secp256k1.Affi
 		temp = secp256k1.ScalarMultiplication(x, vect.Components[i])
 		result = secp256k1.AddTwoPoints(result, temp)
 		x.Mul(scalar)
+	}
+
+	return result
+}
+
+func (vect *CommitmentVector) EvaluateHorner(scalar *secp256k1.Scalar) *secp256k1.AffinePoint {
+	n := len(vect.Components)
+	result := vect.Components[n-1]
+
+	var temp = new(secp256k1.AffinePoint)
+
+	for i := n - 2; i >= 0; i-- {
+		temp = secp256k1.ScalarMultiplication(scalar, result)
+		result = secp256k1.AddTwoPoints(vect.Components[i], temp)
 	}
 
 	return result

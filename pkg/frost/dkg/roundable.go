@@ -7,6 +7,6 @@ import (
 // structured as described in https://eprint.iacr.org/2020/852.pdf
 type Roundable interface {
 	Generate() []packages.Packable
-	ProcessAndVerify([]packages.Packable) error
+	ProcessAndVerify([]packages.Packable) (packages.Packable, error)
 	NextRound() Roundable
 }

@@ -13,7 +13,6 @@ var curve = dcred_secp256k1.S256()
 
 type Scalar = dcred_secp256k1.ModNScalar
 
-// (x, y)
 type AffinePoint struct {
 	X, Y *big.Int
 }

@@ -4,7 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/binary"
 
-	"github.com/sillygoofymaster/wstsinator/pkg/internal/secp256k1"
+	"github.com/sillygoofymaster/wstsinator/pkg/helpers/secp256k1"
 )
 
 const CTX_STR = "FROST-SECP256K1"

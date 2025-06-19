@@ -1,8 +1,8 @@
 package dkg
 
 import (
-	"github.com/sillygoofymaster/wstsinator/pkg/internal/commitment"
-	"github.com/sillygoofymaster/wstsinator/pkg/internal/secp256k1"
+	"github.com/sillygoofymaster/wstsinator/pkg/helpers/commitment"
+	"github.com/sillygoofymaster/wstsinator/pkg/helpers/secp256k1"
 )
 
 const MAX_SIZE = ^uint16(0)
@@ -13,10 +13,10 @@ type Session struct {
 	Size      uint32 // N
 	Threshold uint32 // T
 
-	SecretShare *secp256k1.Scalar
-	Polynomial  *commitment.Polynomial
-	CommSum     *commitment.CommitmentVector            // componentwise sum of all commitments
-	Comms       map[uint32]*commitment.CommitmentVector // commitment vectors of all participants
+	Secret     *secp256k1.Scalar
+	Polynomial *commitment.Polynomial
+	CommSum    *commitment.CommitmentVector            // componentwise sum of all commitments
+	Comms      map[uint32]*commitment.CommitmentVector // commitment vectors of all participants
 }
 
 func CreateSession(selfId uint32, partyIds []uint32, size uint32, threshold uint32) *Session {

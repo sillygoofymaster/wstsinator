@@ -2,8 +2,11 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/sillygoofymaster/wstsinator/pkg/frost/dkg"
 	"github.com/sillygoofymaster/wstsinator/pkg/frost/dkg/packages"
+	"github.com/sillygoofymaster/wstsinator/pkg/helpers/secp256k1"
 )
 
 func collectPackages(self uint32, pkgs []packages.Packable) []packages.Packable {
@@ -12,6 +15,13 @@ func collectPackages(self uint32, pkgs []packages.Packable) []packages.Packable 
 		base := pkg.GetBase()
 		if base == nil || base.From == self || (base.To != 0 && base.To != self) {
 			continue
+		}
+
+		// to initiate investigation
+		round2pkg, ok := pkg.(*packages.Round2Package)
+		if ok && base.From == 5 && self == 4 {
+			round2pkg.Share = secp256k1.GetRandomScalar()
+			pkgs[i] = round2pkg
 		}
 
 		result = append(result, pkgs[i])
@@ -44,8 +54,12 @@ func mockTransport(sessions map[uint32]*dkg.Session, partyIds []uint32) {
 
 		for _, i := range partyIds {
 			recvPkgs := collectPackages(uint32(i), pkgs)
-			if err := rounds[i].Round.ProcessAndVerify(recvPkgs); err != nil {
+			pkg, err := rounds[i].Round.ProcessAndVerify(recvPkgs)
+			if err != nil {
 				panic(err)
+			}
+			if pkg != nil {
+				fmt.Printf("participant with id %d finished dkg successfully\n", i)
 			}
 		}
 

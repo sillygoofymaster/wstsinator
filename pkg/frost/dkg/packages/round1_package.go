@@ -1,8 +1,8 @@
 package packages
 
 import (
-	"github.com/sillygoofymaster/wstsinator/pkg/internal/commitment"
-	"github.com/sillygoofymaster/wstsinator/pkg/internal/pok"
+	"github.com/sillygoofymaster/wstsinator/pkg/helpers/commitment"
+	"github.com/sillygoofymaster/wstsinator/pkg/helpers/pok"
 )
 
 type Round1Package struct {

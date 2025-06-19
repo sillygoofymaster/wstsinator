@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/sillygoofymaster/wstsinator/pkg/internal/secp256k1"
+	"github.com/sillygoofymaster/wstsinator/pkg/helpers/secp256k1"
 	"github.com/stretchr/testify/assert"
 )
 
