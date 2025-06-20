@@ -6,20 +6,16 @@ import (
 
 type OutputPackage struct {
 	Base                    *BasePackage
-	SecretShare             *secp256k1.Scalar
-	PublicVerificationShare *secp256k1.AffinePoint
+	SecretShare             map[uint32]*secp256k1.Scalar // a point per key
+	PublicVerificationShare map[uint32]*secp256k1.AffinePoint
 	GroupPublicKey          *secp256k1.AffinePoint
-}
-
-func (pkg *OutputPackage) ShouldBroadcast() bool {
-	return false
 }
 
 func (pkg *OutputPackage) GetBase() *BasePackage {
 	return pkg.Base
 }
 
-func NewOutputPackage(from uint32, secshare *secp256k1.Scalar, pubshare *secp256k1.AffinePoint, groupPublicKey *secp256k1.AffinePoint) *OutputPackage {
+func NewOutputPackage(from uint32, secshare map[uint32]*secp256k1.Scalar, pubshare map[uint32]*secp256k1.AffinePoint, groupPublicKey *secp256k1.AffinePoint) *OutputPackage {
 	base := &BasePackage{
 		From: from,
 	}

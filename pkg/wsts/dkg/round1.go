@@ -1,12 +1,12 @@
+// exact copy of frost's first round
 package dkg
 
 import (
 	"fmt"
 
-	"github.com/sillygoofymaster/wstsinator/pkg/frost/dkg/packages"
 	"github.com/sillygoofymaster/wstsinator/pkg/helpers/commitment"
 	"github.com/sillygoofymaster/wstsinator/pkg/helpers/pok"
-	//"github.com/sillygoofymaster/wstsinator/pkg/helpers/secp256k1"
+	"github.com/sillygoofymaster/wstsinator/pkg/wsts/dkg/packages"
 )
 
 type Round1 struct {
@@ -22,14 +22,14 @@ func (round *Round1) Generate() []packages.Packable {
 	// every Pi computes a proof of knowledge to the corresponding secret a_i0
 	a0 := round.Session.Polynomial.Secret()
 
-	pok := pok.CreatePoK(round.Session.SelfId, a0)
+	pok := pok.CreatePoK(round.Session.SelfId.OwnId, a0)
 
 	comvect := commitment.Copy(round.Session.CommSum)
 
-	round.Session.Comms[round.Session.SelfId] = commitment.Copy(comvect)
+	round.Session.Comms[round.Session.SelfId.OwnId] = commitment.Copy(comvect)
 
 	base := packages.BasePackage{
-		From: round.Session.SelfId,
+		From: round.Session.SelfId.OwnId,
 	}
 
 	output := packages.Round1Package{
@@ -44,7 +44,7 @@ func (round *Round1) Generate() []packages.Packable {
 // every participant Pi verifies PoK received from every other participant
 func (round *Round1) ProcessAndVerify(pkgs []packages.Packable) (packages.Packable, error) {
 
-	if len(pkgs) != int(round.Session.Size)-1 {
+	if len(pkgs) != int(round.Session.PartySize)-1 {
 		return nil, fmt.Errorf("wrong package amount passed")
 	}
 
@@ -56,7 +56,7 @@ func (round *Round1) ProcessAndVerify(pkgs []packages.Packable) (packages.Packab
 		}
 
 		base := round1Pkg.GetBase()
-		if base.From == round.Session.SelfId {
+		if base.From == round.Session.SelfId.OwnId {
 			return nil, fmt.Errorf("package addressed to oneself")
 		}
 

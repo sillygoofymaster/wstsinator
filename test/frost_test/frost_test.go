@@ -1,8 +1,9 @@
 // mock run with a trusted dealer
-package main
+package test
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/sillygoofymaster/wstsinator/pkg/frost/dkg"
 	"github.com/sillygoofymaster/wstsinator/pkg/frost/dkg/packages"
@@ -82,7 +83,7 @@ func mockTransport(sessions map[uint32]*dkg.Session, partyIds []uint32) {
 	}
 }
 
-func main() {
+func TestFrost(t *testing.T) {
 	size := uint32(5)
 	threshold := uint32(3)
 
@@ -93,7 +94,7 @@ func main() {
 
 	sessions := make(map[uint32]*dkg.Session, size)
 	for _, pid := range partyIds {
-		sessions[pid] = dkg.CreateSession(pid, partyIds, size, threshold)
+		sessions[pid] = dkg.CreateSession(pid, partyIds, threshold)
 	}
 
 	mockTransport(sessions, partyIds)

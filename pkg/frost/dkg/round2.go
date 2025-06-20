@@ -19,16 +19,12 @@ func (round *Round2) Generate() []packages.Packable {
 
 	for _, i := range round.Session.PartyIds {
 		share := round.Session.Polynomial.Evaluate(secp256k1.IdToScalar(i))
-		//////temp
-
-		/////////
-
 		if round.Session.SelfId == i {
 			round.Session.Secret = share
 			continue
 		}
 
-		pkg := packages.CreateRound2PrepPackage(round.Session.SelfId, i, share)
+		pkg := packages.CreateRound2Package(round.Session.SelfId, i, share)
 		result = append(result, pkg)
 	}
 
@@ -72,10 +68,11 @@ func (round *Round2) ProcessAndVerify(pkgs []packages.Packable) (packages.Packab
 		if err != nil {
 			return nil, fmt.Errorf("dkg failed: %s", err)
 		}
-		panic("dkg failde and the faulty party was not identified")
+		panic("dkg failed and the faulty party was not identified")
 	}
+	groupPublicKey := round.Session.CommSum.Components[0]
 
-	output := packages.NewOutputPackage(round.Session.SelfId, secshare, secshareG)
+	output := packages.NewOutputPackage(round.Session.SelfId, secshare, secshareG, groupPublicKey)
 	return output, nil
 }
 

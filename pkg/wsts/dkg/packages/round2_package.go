@@ -9,15 +9,15 @@ type Round2Package struct {
 	Share *secp256k1.Scalar
 }
 
-func (*Round2Package) ShouldBroadcast() bool {
-	return false
-}
-
 func (pkg *Round2Package) GetBase() *BasePackage {
 	return pkg.Base
 }
 
-func CreateRound2Package(From uint32, To uint32, Share *secp256k1.Scalar) *Round2Package {
+func CreateRound2Package(From uint32, partyid uint32, keyid uint32, Share *secp256k1.Scalar) *Round2Package {
+	To := &To{
+		PartyId: partyid,
+		KeyId:   keyid,
+	}
 	base := &BasePackage{
 		From: From,
 		To:   To,
